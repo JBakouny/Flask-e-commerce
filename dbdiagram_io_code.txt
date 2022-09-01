@@ -1,0 +1,42 @@
+Table users as U {
+  id int [pk, increment] // auto-increment
+  name string
+  phone string
+  location string
+  password string
+}
+
+
+Table ecommerce.order_items {
+  order_id int [ref: > ecommerce.orders.id] // inline relationship (many-to-one)
+  product_id int
+  quantity int [default: 1] // default value
+}
+
+Ref: ecommerce.order_items.product_id > ecommerce.products.id
+
+Table ecommerce.orders {
+  id int [pk] // primary key
+  user_id int [not null, unique]
+  status string 
+  // In Progress -> cart
+  // Ordered
+  // Delivered
+}
+
+
+Enum ecommerce.products_status {
+  out_of_stock
+  in_stock
+  running_low [note: 'less than 20'] // add column note
+}
+
+Table ecommerce.products {
+  id int [pk]
+  name varchar
+  price int
+  imageURL string
+}
+
+Ref: ecommerce.orders.user_id > public.users.id
+
